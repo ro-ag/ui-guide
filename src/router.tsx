@@ -1,0 +1,32 @@
+import { QueryClient } from "@tanstack/react-query";
+import { createHashHistory, createRouter } from "@tanstack/react-router";
+import { routeTree } from "./routeTree.gen";
+
+export const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 1,
+      refetchOnWindowFocus: false,
+    },
+  },
+});
+
+// Hash history guarantees reliable routing inside Tauri's bundled custom protocol
+// (`tauri://localhost` / `http://tauri.localhost`) without server fallback rules.
+const hashHistory = createHashHistory();
+
+export const router = createRouter({
+  routeTree,
+  history: hashHistory,
+  context: {
+    queryClient,
+  },
+  defaultPreload: "intent",
+  defaultPreloadStaleTime: 0,
+});
+
+declare module "@tanstack/react-router" {
+  interface Register {
+    router: typeof router;
+  }
+}

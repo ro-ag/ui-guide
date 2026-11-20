@@ -1,0 +1,742 @@
+@import "tailwindcss";
+@import "./tokens.css";
+
+/* Bind Tailwind `dark:*` utilities to the active resolved theme attribute
+   so both semantic tokens and Tailwind dark: utilities honor Light/Dark overrides. */
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+/*
+ * Tailwind CSS v4 @theme bridge:
+ * Exposes our semantic tokens as native Tailwind utilities:
+ *   bg-night, bg-canvas, bg-surface, bg-surface-raised, bg-surface-soft,
+ *   text-ink-primary, text-ink-soft, text-ink-muted, text-ink-faint,
+ *   text-accent-text, border-line, border-line-subtle, border-line-strong,
+ *   ease-shell, etc.
+ */
+@theme inline {
+  --color-night: var(--night);
+  --color-canvas: var(--canvas-bg);
+  --color-surface: var(--surface);
+  --color-surface-raised: var(--surface-raised);
+  --color-surface-soft: var(--surface-soft);
+  --color-surface-hover: var(--surface-hover);
+  --color-dialog: var(--dialog-bg);
+  --color-dock: var(--dock-bg);
+  --color-line: var(--line);
+  --color-line-subtle: var(--line-subtle);
+  --color-line-strong: var(--line-strong);
+  --color-control-border: var(--control-border);
+  --color-ink-primary: var(--text);
+  --color-ink-soft: var(--text-soft);
+  --color-ink-muted: var(--muted);
+  --color-ink-faint: var(--faint);
+  --color-accent: var(--accent);
+  --color-accent-text: var(--accent-text);
+  --color-accent-strong: var(--accent-strong);
+  --color-accent-dim: var(--accent-dim);
+  --color-accent-soft: var(--accent-soft);
+  --color-on-accent: var(--ink);
+  --color-info: var(--info);
+  --color-todo: var(--todo);
+  --color-doing: var(--doing);
+  --color-blocked: var(--blocked);
+  --color-blocked-strong: var(--blocked-strong);
+  --color-done: var(--done);
+  --color-fill-subtle: var(--fill-subtle);
+  --color-fill: var(--fill);
+  --color-fill-hover: var(--fill-hover);
+  --color-fill-strong: var(--fill-strong);
+  --color-nav-active: var(--nav-active-bg);
+
+  --ease-shell: var(--ease);
+  --font-sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+@layer base {
+  html,
+  body,
+  #root {
+    width: 100%;
+    min-width: 0;
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    font-size: 0.875rem;
+    line-height: 1.45;
+    color: var(--text);
+    background: var(--body-glow-1), var(--body-glow-2), var(--night);
+    font-synthesis: none;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Standard scrollbars with WCAG 1.4.11 >= 3:1 thumb contrast.
+     Never transition scrollbar-color (WebKit flicker bug #311752). */
+  * {
+    scrollbar-color: var(--scrollbar-thumb) transparent;
+    scrollbar-width: thin;
+  }
+
+  /* Legacy WebKit fallback gated behind @supports so modern engines use standard properties. */
+  @supports not (scrollbar-color: auto) {
+    * {
+      scrollbar-width: auto;
+    }
+
+    *::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+
+    *::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    *::-webkit-scrollbar-thumb {
+      border: 2px solid transparent;
+      border-radius: 999px;
+      background: var(--scrollbar-thumb);
+      background-clip: padding-box;
+    }
+
+    *::-webkit-scrollbar-thumb:hover {
+      background: var(--scrollbar-thumb-hover);
+      background-clip: padding-box;
+    }
+  }
+
+  :is(button, a, input, select, textarea, [tabindex]):focus-visible {
+    outline: none;
+    box-shadow:
+      0 0 0 1px var(--accent-border),
+      0 0 0 4px var(--accent-ring);
+  }
+}
+
+/* ── Signature Shell Layout: Sidebar-as-Window-Background ────────────────── */
+
+.app-shell {
+  display: grid;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  grid-template-columns: var(--sidebar-width) 5px minmax(0, 1fr);
+  background: var(--body-glow-1), var(--body-glow-2), var(--night);
+}
+
+.app-shell[data-sidebar-hidden="true"] {
+  grid-template-columns: 0 0 minmax(0, 1fr);
+}
+
+.app-sidebar {
+  grid-column: 1;
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--sidebar-bg);
+  padding: 0 var(--space-150) var(--space-200);
+  view-transition-name: shell-sidebar;
+}
+
+.app-shell[data-sidebar-hidden="true"] .app-sidebar,
+.app-shell[data-sidebar-hidden="true"] .sidebar-resizer {
+  display: none;
+}
+
+/* 5px invisible splitter that glows in --accent only on hover or focus. */
+.sidebar-resizer {
+  grid-column: 2;
+  position: relative;
+  z-index: 8;
+  min-width: 5px;
+  min-height: 0;
+  cursor: ew-resize;
+  touch-action: none;
+}
+
+.sidebar-resizer::after {
+  content: "";
+  position: absolute;
+  inset: 52px 1px 16px;
+  border-radius: 999px;
+  background: transparent;
+  transition:
+    background-color 150ms var(--ease),
+    box-shadow 150ms var(--ease);
+}
+
+.sidebar-resizer:hover::after,
+.sidebar-resizer:focus-visible::after,
+.sidebar-resizer[data-dragging="true"]::after {
+  background: var(--accent);
+  box-shadow: 0 0 10px var(--accent-glow);
+}
+
+.sidebar-resizer:focus-visible {
+  box-shadow: none;
+}
+
+/* Floating inset workspace canvas */
+.app-canvas {
+  grid-column: 3;
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  margin: var(--space-100) var(--space-100) var(--space-100) 0;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--canvas-bg);
+  box-shadow: var(--shadow-1);
+}
+
+.app-shell[data-sidebar-hidden="true"] .app-canvas {
+  margin-left: var(--space-100);
+}
+
+/* Frosted topbar inside the elevated canvas */
+.app-topbar {
+  height: 44px;
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-100);
+  padding: 0 var(--space-150);
+  border-bottom: 1px solid var(--line-subtle);
+  background: var(--topbar-bg);
+  -webkit-backdrop-filter: blur(18px) saturate(1.35);
+  backdrop-filter: blur(18px) saturate(1.35);
+  view-transition-name: shell-topbar;
+}
+
+/* When the sidebar collapses on macOS, clear the inset traffic lights in the topbar. */
+:root[data-platform="macos"] .app-shell[data-sidebar-hidden="true"] .app-topbar {
+  padding-left: 88px;
+}
+
+/* Signature vertical brand mark pill */
+.brand-mark {
+  width: 6px;
+  flex: 0 0 auto;
+  align-self: stretch;
+  margin: 2px 0;
+  border-radius: 999px;
+  background: linear-gradient(180deg, var(--accent-strong), var(--accent) 45%, #2f7fd0);
+  box-shadow:
+    0 0 18px var(--accent-glow),
+    0 0 42px var(--accent-soft);
+}
+
+/* Sidebar interactive row with inset 3px left accent rail on hover */
+.sidebar-row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--space-100);
+  width: 100%;
+  min-height: 30px;
+  height: 30px;
+  padding: 0 var(--space-100);
+  border: 0;
+  border-radius: 7px;
+  color: var(--muted);
+  background: transparent;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-align: left;
+  text-decoration: none;
+  user-select: none;
+  transition:
+    background-color 160ms var(--ease),
+    box-shadow 160ms var(--ease),
+    color 160ms var(--ease);
+}
+
+.sidebar-row:hover {
+  color: var(--text-soft);
+  background: var(--fill-hover);
+}
+
+.sidebar-row--accent-hover:hover {
+  color: var(--text-soft);
+  background: var(--accent-soft);
+  box-shadow:
+    inset 3px 0 0 var(--accent),
+    inset 0 0 0 1px var(--accent-ring);
+}
+
+.sidebar-row[data-active="true"],
+.sidebar-row[data-active="true"]:hover,
+.sidebar-row[aria-current="page"],
+.sidebar-row[aria-current="page"]:hover {
+  color: var(--nav-active-text);
+  background: var(--nav-active-bg);
+  box-shadow: none;
+}
+
+/* Recessed featured card in sidebar (like p-track's Current Plan card) */
+.sidebar-featured-card {
+  position: relative;
+  width: 100%;
+  min-width: 0;
+  padding: 10px var(--space-150);
+  border: 1px solid var(--line-subtle);
+  border-radius: 9px;
+  color: var(--text);
+  background: color-mix(in srgb, var(--night) 50%, var(--surface-soft));
+  box-shadow:
+    inset 0 2px 6px color-mix(in srgb, var(--night) 45%, transparent),
+    inset 0 1px 0 var(--sheen);
+  transition: border-color 150ms var(--ease);
+}
+
+.sidebar-featured-card:hover {
+  border-color: var(--line);
+}
+
+.progress-meter-fill {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--accent-dim), var(--accent) 55%, var(--accent-strong));
+  box-shadow: 0 0 9px var(--accent-glow);
+  transition: width 240ms var(--ease);
+}
+
+/* ── Primary & Secondary Tactile Buttons ─────────────────────────────────── */
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 34px;
+  padding: 0 var(--space-150);
+  border: 1px solid var(--accent-border);
+  border-radius: 9px;
+  color: var(--ink);
+  background: var(--button-bg);
+  box-shadow: var(--highlight-inset), var(--shadow-button);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  transition:
+    border-color 150ms var(--ease),
+    background 150ms var(--ease),
+    box-shadow 150ms var(--ease),
+    transform 150ms var(--ease);
+}
+
+.btn-primary:hover {
+  background: var(--button-bg-hover);
+  box-shadow:
+    var(--highlight-inset),
+    var(--shadow-button),
+    0 6px 22px var(--accent-glow);
+}
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 34px;
+  padding: 0 var(--space-150);
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  color: var(--text-soft);
+  background: var(--fill);
+  box-shadow: var(--highlight-inset);
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    border-color 150ms var(--ease),
+    background-color 150ms var(--ease),
+    color 150ms var(--ease),
+    box-shadow 150ms var(--ease),
+    transform 150ms var(--ease);
+}
+
+.btn-secondary:hover {
+  border-color: var(--line-strong);
+  color: var(--text);
+  background: var(--fill-strong);
+}
+
+/* Tactile depression & card lift only activate when spatial motion is allowed. */
+@media (prefers-reduced-motion: no-preference) {
+  :root:not([data-reduced-motion="always"]) .btn-primary:active,
+  :root:not([data-reduced-motion="always"]) .btn-secondary:active {
+    transform: translateY(1px);
+  }
+
+  :root:not([data-reduced-motion="always"]) .interactive-card:hover {
+    transform: translateY(-1px);
+  }
+
+  :root:not([data-reduced-motion="always"]) .icon-spin-hover:hover svg {
+    transform: rotate(60deg);
+  }
+
+  :root:not([data-reduced-motion="always"]) .icon-spin-hover:active svg {
+    transform: rotate(90deg) scale(0.9);
+  }
+}
+
+:root[data-reduced-motion="never"] .btn-primary:active,
+:root[data-reduced-motion="never"] .btn-secondary:active {
+  transform: translateY(1px);
+}
+
+:root[data-reduced-motion="never"] .interactive-card:hover {
+  transform: translateY(-1px);
+}
+
+:root[data-reduced-motion="never"] .icon-spin-hover:hover svg {
+  transform: rotate(60deg);
+}
+
+:root[data-reduced-motion="never"] .icon-spin-hover:active svg {
+  transform: rotate(90deg) scale(0.9);
+}
+
+.icon-spin-hover svg {
+  transition: transform 200ms var(--ease);
+}
+
+.interactive-card {
+  border: 1px solid var(--line);
+  border-radius: 11px;
+  background: var(--card-sheen), var(--surface-raised);
+  box-shadow: var(--highlight-inset), var(--shadow-button);
+  transition:
+    border-color 150ms var(--ease),
+    background-color 150ms var(--ease),
+    box-shadow 150ms var(--ease),
+    transform 150ms var(--ease);
+}
+
+.interactive-card:hover {
+  border-color: var(--line-strong);
+  background: var(--card-sheen), var(--surface-hover);
+  box-shadow: var(--highlight-inset), var(--shadow-1);
+}
+
+/* Compact topbar icon buttons use an inward focus ring so clips never cut it off. */
+.topbar-toggle:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+  box-shadow: none;
+}
+
+/* ── Native <dialog> Top-Layer Modals & Slide-Over Drawer ────────────────── */
+/*
+ * Modern CSS Top-Layer Transitions:
+ * - Never set display unconditionally on dialog; scope to dialog[open].
+ * - Include display & overlay in transition-property, with separate
+ *   transition-behavior: allow-discrete.
+ * - :where(:not([data-closing])) enables the WKWebView/Safari/Firefox exit fallback.
+ * - Prevent background scroll chaining via overscroll-behavior: contain.
+ */
+
+dialog.shell-dialog {
+  margin: auto;
+  padding: 0;
+  max-width: calc(100vw - 32px);
+  max-height: calc(100dvh - 48px);
+  overflow: hidden;
+  border: 1px solid var(--line-strong);
+  border-radius: 14px;
+  color: var(--text);
+  background: var(--dialog-sheen), var(--dialog-bg);
+  box-shadow: var(--highlight-inset), var(--shadow-2);
+  opacity: 0;
+  transition-property: opacity, transform, display, overlay;
+  transition-duration: 200ms;
+  transition-timing-function: var(--ease);
+  transition-behavior: allow-discrete;
+}
+
+dialog.shell-dialog:modal {
+  overscroll-behavior: contain;
+}
+
+dialog.shell-dialog[open] {
+  display: flex;
+  flex-direction: column;
+}
+
+dialog.shell-dialog--palette {
+  margin-top: min(14vh, 130px);
+  margin-bottom: auto;
+  width: min(520px, calc(100vw - 32px));
+}
+
+dialog.shell-dialog--settings {
+  width: min(760px, calc(100vw - 32px));
+  height: min(580px, calc(100dvh - 48px));
+}
+
+/* Slide-over inspector drawer: light unblurred scrim keeps the canvas legible. */
+dialog.shell-dialog--drawer {
+  margin: 0 0 0 auto;
+  width: min(420px, 94vw);
+  height: 100dvh;
+  max-height: 100dvh;
+  border: 0;
+  border-left: 1px solid var(--line-strong);
+  border-radius: 0;
+  background:
+    linear-gradient(180deg, var(--accent-soft), transparent 220px),
+    var(--drawer-bg);
+  -webkit-backdrop-filter: blur(20px) saturate(1.2);
+  backdrop-filter: blur(20px) saturate(1.2);
+  box-shadow: var(--drawer-shadow);
+  transition-duration: 220ms;
+}
+
+dialog.shell-dialog::backdrop {
+  overflow: hidden;
+  overscroll-behavior: contain;
+  background: transparent;
+  -webkit-backdrop-filter: blur(0px);
+  backdrop-filter: blur(0px);
+  transition-property: background-color, backdrop-filter, -webkit-backdrop-filter, display, overlay;
+  transition-duration: 180ms;
+  transition-timing-function: var(--ease);
+  transition-behavior: allow-discrete;
+}
+
+dialog.shell-dialog[open]:where(:not([data-closing])) {
+  opacity: 1;
+
+  @starting-style {
+    opacity: 0;
+  }
+
+  &::backdrop {
+    background: var(--backdrop-bg);
+    -webkit-backdrop-filter: blur(10px) saturate(1.15);
+    backdrop-filter: blur(10px) saturate(1.15);
+
+    @starting-style {
+      background: transparent;
+      -webkit-backdrop-filter: blur(0px);
+      backdrop-filter: blur(0px);
+    }
+  }
+}
+
+dialog.shell-dialog--drawer[open]:where(:not([data-closing]))::backdrop {
+  background: var(--drawer-scrim);
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+
+  @starting-style {
+    background: transparent;
+  }
+}
+
+/* Spatial entry/exit transforms only when motion is permitted. */
+@media (prefers-reduced-motion: no-preference) {
+  :root:not([data-reduced-motion="always"]) dialog.shell-dialog {
+    transform: translateY(8px) scale(0.97);
+  }
+
+  :root:not([data-reduced-motion="always"]) dialog.shell-dialog--drawer {
+    transform: translateX(28px);
+  }
+
+  :root:not([data-reduced-motion="always"])
+    dialog.shell-dialog[open]:where(:not([data-closing])) {
+    transform: translateY(0) scale(1);
+
+    @starting-style {
+      transform: translateY(8px) scale(0.97);
+    }
+  }
+
+  :root:not([data-reduced-motion="always"])
+    dialog.shell-dialog--drawer[open]:where(:not([data-closing])) {
+    transform: translateX(0);
+
+    @starting-style {
+      transform: translateX(28px);
+    }
+  }
+}
+
+:root[data-reduced-motion="never"] dialog.shell-dialog {
+  transform: translateY(8px) scale(0.97);
+}
+
+:root[data-reduced-motion="never"] dialog.shell-dialog--drawer {
+  transform: translateX(28px);
+}
+
+:root[data-reduced-motion="never"]
+  dialog.shell-dialog[open]:where(:not([data-closing])) {
+  transform: translateY(0) scale(1);
+
+  @starting-style {
+    transform: translateY(8px) scale(0.97);
+  }
+}
+
+:root[data-reduced-motion="never"]
+  dialog.shell-dialog--drawer[open]:where(:not([data-closing])) {
+  transform: translateX(0);
+
+  @starting-style {
+    transform: translateX(28px);
+  }
+}
+
+/* Under reduced motion, shorten overlay opacity fade instead of jumping abruptly. */
+:root[data-reduced-motion="always"] dialog.shell-dialog,
+:root[data-reduced-motion="always"] dialog.shell-dialog::backdrop {
+  transition-duration: 80ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root:not([data-reduced-motion="never"]) dialog.shell-dialog,
+  :root:not([data-reduced-motion="never"]) dialog.shell-dialog::backdrop {
+    transition-duration: 80ms;
+  }
+}
+
+/* ── Toast Entrance ──────────────────────────────────────────────────────── */
+
+@keyframes toast-enter {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+
+@keyframes toast-fade {
+  from {
+    opacity: 0;
+  }
+}
+
+.shell-toast {
+  animation: toast-fade 120ms var(--ease);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  :root:not([data-reduced-motion="always"]) .shell-toast {
+    animation: toast-enter 220ms var(--ease);
+  }
+}
+
+:root[data-reduced-motion="never"] .shell-toast {
+  animation: toast-enter 220ms var(--ease);
+}
+
+/* ── Route View Transitions (Same-Document Transitions API) ──────────────── */
+
+.canvas-route-stage {
+  view-transition-name: canvas-stage;
+}
+
+::view-transition-old(shell-sidebar),
+::view-transition-new(shell-sidebar),
+::view-transition-old(shell-topbar),
+::view-transition-new(shell-topbar) {
+  animation: none;
+}
+
+@keyframes route-out {
+  to {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+}
+
+@keyframes route-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+
+::view-transition-old(canvas-stage) {
+  animation: route-out 140ms var(--ease) both;
+}
+
+::view-transition-new(canvas-stage) {
+  animation: route-in 190ms var(--ease) both;
+}
+
+:root[data-reduced-motion="always"]::view-transition-group(*),
+:root[data-reduced-motion="always"]::view-transition-old(*),
+:root[data-reduced-motion="always"]::view-transition-new(*) {
+  animation: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root:not([data-reduced-motion="never"])::view-transition-group(*),
+  :root:not([data-reduced-motion="never"])::view-transition-old(*),
+  :root:not([data-reduced-motion="never"])::view-transition-new(*) {
+    animation: none !important;
+  }
+}
+
+/* ── Forced Colors / High Contrast Mode ──────────────────────────────────── */
+
+@media (forced-colors: active) {
+  :is(button, a, input, select, textarea, [tabindex]):focus-visible {
+    outline: 2px solid Highlight;
+    outline-offset: 2px;
+    box-shadow: none;
+  }
+
+  .app-canvas,
+  .interactive-card,
+  dialog.shell-dialog {
+    border-color: CanvasText;
+  }
+
+  .sidebar-row[aria-current="page"],
+  .sidebar-row[data-active="true"] {
+    color: HighlightText;
+    background: Highlight;
+    forced-color-adjust: none;
+  }
+}
+
+/* ── Responsive Narrow Window Reflow ─────────────────────────────────────── */
+
+@media (max-width: 640px) {
+  .app-shell,
+  .app-shell[data-sidebar-hidden="true"] {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto minmax(0, 1fr);
+  }
+
+  .app-sidebar {
+    grid-column: 1;
+    max-height: min(280px, 50dvh);
+    overflow-y: auto;
+    border-bottom: 1px solid var(--line-subtle);
+  }
+
+  .sidebar-resizer {
+    display: none;
+  }
+
+  .app-canvas {
+    grid-column: 1;
+    margin: var(--space-050);
+  }
+}

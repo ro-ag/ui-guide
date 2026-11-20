@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="light dark" />
+    <script>
+      // Pre-paint bootstrap: restore color-scheme, density, reduced motion,
+      // and sidebar geometry synchronously before first paint to prevent FOUC.
+      (() => {
+        try {
+          const storedScheme = localStorage.getItem("shell-color-scheme");
+          const meta = document.querySelector('meta[name="color-scheme"]');
+          if (storedScheme === "dark" || storedScheme === "light") {
+            if (meta) meta.content = storedScheme;
+            document.documentElement.dataset.theme = storedScheme;
+            document.documentElement.dataset.themeOverride = storedScheme;
+          } else {
+            if (meta) meta.content = "light dark";
+            document.documentElement.removeAttribute("data-theme-override");
+            document.documentElement.dataset.theme = matchMedia(
+              "(prefers-color-scheme: light)",
+            ).matches
+              ? "light"
+              : "dark";
+          }
+
+          const density = localStorage.getItem("shell-density");
+          if (density === "compact") {
+            document.documentElement.dataset.density = "compact";
+          }
+
+          const reducedMotion = localStorage.getItem("shell-reduced-motion");
+          if (reducedMotion === "always" || reducedMotion === "never") {
+            document.documentElement.dataset.reducedMotion = reducedMotion;
+          }
+
+          const width = Number(localStorage.getItem("shell-sidebar-width"));
+          if (Number.isFinite(width) && width >= 180 && width <= 420) {
+            document.documentElement.style.setProperty(
+              "--sidebar-width",
+              `${Math.round(width)}px`,
+            );
+          }
+
+          if (localStorage.getItem("shell-sidebar-hidden") === "true") {
+            document.documentElement.dataset.sidebarHidden = "true";
+          }
+
+          if (/Mac|iPhone|iPad|iPod/i.test(navigator.platform || navigator.userAgent)) {
+            document.documentElement.dataset.platform = "macos";
+          }
+        } catch {
+          // Storage access can throw in restricted WebViews; CSS defaults remain valid.
+        }
+      })();
+    </script>
+    <title>Tauri Canvas Shell</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
