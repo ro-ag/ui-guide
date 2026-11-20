@@ -1,7 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 import { useSelector } from "@tanstack/react-store";
-import { RotateCcw, X } from "lucide-react";
+import { Check, RotateCcw, X } from "lucide-react";
+import { LayoutGroup, motion } from "motion/react";
 import { useState } from "react";
+import { ACCENT_PRESETS, APP_BRAND } from "../../config/shell-config";
 import type { ReducedMotionPreference } from "../../lib/motion";
 import { appInfoQueryOptions } from "../../lib/queries";
 import {
@@ -10,6 +12,7 @@ import {
   readSystemTheme,
 } from "../../lib/theme";
 import { shellStore } from "../../stores/shell-store";
+import { SPRING_PILL } from "../ui/MotionPrimitives";
 import { NativeDialog } from "./NativeDialog";
 
 type SettingsSection = "appearance" | "layout" | "diagnostics";
@@ -23,6 +26,8 @@ const SECTIONS: Array<{ id: SettingsSection; label: string }> = [
 export function SettingsDialog() {
   const open = useSelector(shellStore, (s) => s.settingsOpen);
   const themePreference = useSelector(shellStore, (s) => s.themePreference);
+  const resolvedTheme = useSelector(shellStore, (s) => s.resolvedTheme);
+  const accent = useSelector(shellStore, (s) => s.accent);
   const density = useSelector(shellStore, (s) => s.density);
   const reducedMotion = useSelector(shellStore, (s) => s.reducedMotion);
   const sidebarWidth = useSelector(shellStore, (s) => s.sidebarWidth);
@@ -40,7 +45,7 @@ export function SettingsDialog() {
     >
       <header className="flex shrink-0 items-center justify-between gap-4 border-b border-line-strong px-6 py-4">
         <div>
-          <p className="mb-1 text-[0.6875rem] font-extrabold tracking-[0.14em] text-ink-soft uppercase">
+          <p className="mb-1 text-[0.6875rem] font-extrabold tracking-[0.14em] text-accent-text uppercase">
             Preferences
           </p>
           <h2
@@ -62,38 +67,48 @@ export function SettingsDialog() {
       </header>
 
       <div className="flex min-h-0 flex-1 flex-col gap-5 overflow-hidden px-6 py-5 sm:flex-row">
-        <nav
-          aria-label="Settings sections"
-          className="flex shrink-0 flex-row gap-1 sm:w-40 sm:flex-col"
-        >
-          {SECTIONS.map((item) => {
-            const active = section === item.id;
-            return (
-              <button
-                key={item.id}
-                type="button"
-                aria-current={active ? "true" : undefined}
-                onClick={() => setSection(item.id)}
-                className={`flex min-h-9 items-center rounded-lg px-3 text-left text-xs transition-colors duration-150 ease-shell ${
-                  active
-                    ? "bg-accent-soft font-semibold text-ink-primary shadow-[inset_3px_0_0_var(--accent)]"
-                    : "font-medium text-ink-soft hover:bg-fill-hover hover:text-ink-primary"
-                }`}
-              >
-                {item.label}
-              </button>
-            );
-          })}
-        </nav>
+        <LayoutGroup id="settings-tabs">
+          <nav
+            aria-label="Settings sections"
+            className="flex shrink-0 flex-row gap-1 sm:w-40 sm:flex-col"
+          >
+            {SECTIONS.map((item) => {
+              const active = section === item.id;
+              return (
+                <button
+                  key={item.id}
+                  type="button"
+                  aria-current={active ? "true" : undefined}
+                  onClick={() => setSection(item.id)}
+                  className={`relative flex min-h-9 items-center rounded-xl px-3 text-left text-xs transition-colors duration-150 ease-shell ${
+                    active
+                      ? "font-semibold text-ink-primary"
+                      : "font-medium text-ink-soft hover:bg-fill-hover hover:text-ink-primary"
+                  }`}
+                >
+                  {active ? (
+                    <motion.span
+                      layoutId="settings-tab-pill"
+                      transition={SPRING_PILL}
+                      className="sidebar-active-pill"
+                      aria-hidden="true"
+                    />
+                  ) : null}
+                  <span className="relative z-10">{item.label}</span>
+                </button>
+              );
+            })}
+          </nav>
+        </LayoutGroup>
 
         <div className="min-h-0 flex-1 overflow-y-auto pr-1">
           {section === "appearance" ? (
             <div className="grid gap-1">
               <p className="mb-2 text-[0.6875rem] font-extrabold tracking-[0.12em] text-ink-soft uppercase">
-                Appearance &amp; Motion
+                Aurora Theme, Gradient World &amp; Motion
               </p>
 
-              <label className="grid grid-cols-1 items-center gap-2 border-b border-line-subtle py-3 sm:grid-cols-[0.9fr_1.1fr]">
+              <label className="grid grid-cols-1 items-center gap-2 border-b border-line-subtle py-3 sm:grid-cols-[0.85fr_1.15fr]">
                 <div>
                   <span className="block text-xs font-semibold text-ink-primary">
                     Color theme
@@ -110,17 +125,74 @@ export function SettingsDialog() {
                       event.target.value as ThemePreference,
                     )
                   }
-                  className="h-9 rounded-lg border border-control-border bg-[var(--control-solid-bg)] px-2.5 text-xs font-medium text-ink-primary"
+                  className="h-9 rounded-xl border border-control-border bg-[var(--control-solid-bg)] px-3 text-xs font-medium text-ink-primary"
                 >
                   <option value="system">
                     System (Currently {systemScheme})
                   </option>
-                  <option value="dark">Dark</option>
-                  <option value="light">Light</option>
+                  <option value="dark">Dark (Midnight Prism)</option>
+                  <option value="light">Light (Pearl Frost)</option>
                 </select>
               </label>
 
-              <label className="grid grid-cols-1 items-center gap-2 border-b border-line-subtle py-3 sm:grid-cols-[0.9fr_1.1fr]">
+              <div className="grid grid-cols-1 items-center gap-2 border-b border-line-subtle py-3 sm:grid-cols-[0.85fr_1.15fr]">
+                <div>
+                  <span className="block text-xs font-semibold text-ink-primary">
+                    Gradient world
+                  </span>
+                  <span className="block text-xs text-ink-muted">
+                    Morphs aurora orbs, gradients, and highlights via{" "}
+                    <code>themes/accents.css</code>.
+                  </span>
+                </div>
+                <div
+                  role="group"
+                  aria-label="Gradient world"
+                  className="grid grid-cols-2 gap-1.5"
+                >
+                  {ACCENT_PRESETS.map((preset) => {
+                    const selected = accent === preset.id;
+                    const gradient =
+                      resolvedTheme === "dark"
+                        ? preset.gradientDark
+                        : preset.gradientLight;
+                    return (
+                      <button
+                        key={preset.id}
+                        type="button"
+                        aria-pressed={selected}
+                        onClick={() => shellStore.actions.setAccent(preset.id)}
+                        className={`inline-flex h-9 items-center gap-2 rounded-xl border px-2.5 text-xs font-semibold transition-colors duration-150 ease-shell ${
+                          selected
+                            ? "border-accent bg-accent-soft text-ink-primary shadow-[0_0_0_1px_var(--accent-ring)]"
+                            : "border-line bg-fill-subtle text-ink-soft hover:border-line-strong hover:bg-fill-hover"
+                        }`}
+                      >
+                        <span
+                          className="grid h-4 w-4 shrink-0 place-items-center rounded-full shadow-sm"
+                          style={{ background: gradient }}
+                          aria-hidden="true"
+                        >
+                          {selected ? (
+                            <Check
+                              className="h-2.5 w-2.5 stroke-[3]"
+                              style={{
+                                color:
+                                  resolvedTheme === "dark"
+                                    ? "#09061a"
+                                    : "#ffffff",
+                              }}
+                            />
+                          ) : null}
+                        </span>
+                        <span className="truncate">{preset.label}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              <label className="grid grid-cols-1 items-center gap-2 border-b border-line-subtle py-3 sm:grid-cols-[0.85fr_1.15fr]">
                 <div>
                   <span className="block text-xs font-semibold text-ink-primary">
                     Interface density
@@ -137,20 +209,20 @@ export function SettingsDialog() {
                       event.target.value as DensityPreference,
                     )
                   }
-                  className="h-9 rounded-lg border border-control-border bg-[var(--control-solid-bg)] px-2.5 text-xs font-medium text-ink-primary"
+                  className="h-9 rounded-xl border border-control-border bg-[var(--control-solid-bg)] px-3 text-xs font-medium text-ink-primary"
                 >
                   <option value="comfortable">Comfortable</option>
                   <option value="compact">Compact</option>
                 </select>
               </label>
 
-              <label className="grid grid-cols-1 items-center gap-2 border-b border-line-subtle py-3 sm:grid-cols-[0.9fr_1.1fr]">
+              <label className="grid grid-cols-1 items-center gap-2 border-b border-line-subtle py-3 sm:grid-cols-[0.85fr_1.15fr]">
                 <div>
                   <span className="block text-xs font-semibold text-ink-primary">
                     Reduced motion
                   </span>
                   <span className="block text-xs text-ink-muted">
-                    Controls CSS spatial transforms, View Transitions, and
+                    Controls aurora drift, spring glides, View Transitions, and
                     motion/mini.
                   </span>
                 </div>
@@ -162,7 +234,7 @@ export function SettingsDialog() {
                       event.target.value as ReducedMotionPreference,
                     )
                   }
-                  className="h-9 rounded-lg border border-control-border bg-[var(--control-solid-bg)] px-2.5 text-xs font-medium text-ink-primary"
+                  className="h-9 rounded-xl border border-control-border bg-[var(--control-solid-bg)] px-3 text-xs font-medium text-ink-primary"
                 >
                   <option value="system">Follow OS preference</option>
                   <option value="always">Always reduce motion</option>
@@ -214,9 +286,9 @@ export function SettingsDialog() {
 
               <dl className="divide-y divide-line-subtle text-xs">
                 <div className="flex items-center justify-between py-2.5">
-                  <dt className="text-ink-muted">Application</dt>
+                  <dt className="text-ink-muted">Brand</dt>
                   <dd className="font-mono text-ink-primary">
-                    {appInfo?.name ?? "Tauri Canvas Shell"}
+                    {APP_BRAND.name} ({appInfo?.name ?? "tauri-canvas-shell"})
                   </dd>
                 </div>
                 <div className="flex items-center justify-between py-2.5">

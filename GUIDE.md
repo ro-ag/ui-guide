@@ -132,10 +132,12 @@ Because `Overlay` titlebars remove the native title bar handle, the frontend mar
 ## 3. Design Tokens, Theming & WCAG AA Contrast
 
 Theme palettes are separated into modular stylesheets so any downstream app can customize or swap themes cleanly:
-- `src/styles/themes/light.css` — Light theme `--light-*` primitives and fallback rules
-- `src/styles/themes/dark.css` — Dark theme `--dark-*` primitives and fallback rules
-- `src/styles/tokens.css` — Imports both theme files, manages `color-scheme: light dark` and `light-dark()` resolution, and defines the spacing/density scale and shared `--ease` curve
-- `src/styles/app.css` — Bridges tokens into Tailwind CSS v4 via `@theme inline` and registers `@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));` so standard Tailwind `dark:*` utilities also follow the active app theme override
+- `src/styles/themes/light.css` — **Daylight Pearl Frost** Light palette (`#f3f5fc` pearl aurora canvas, frosted translucent white glass inset canvas, indigo-violet-cyan 3-stop iridescent accents)
+- `src/styles/themes/dark.css` — **Midnight Prism Aurora** Dark palette (`#070811` deep obsidian-indigo backdrop with 3 drifting GPU aurora orbs, frosted smoked-glass floating canvas, violet-indigo-cyan 3-stop iridescent accents)
+- `src/styles/themes/accents.css` — 4 swappable gradient theme worlds (`prism`, `aurora`, `hyper`, `solar`) activated via `data-accent` on `:root`
+- `src/styles/tokens.css` — Imports all three theme stylesheets, manages `color-scheme: light dark` and `light-dark()` resolution, and defines the spacing/density scale and shared `--ease` curve
+- `src/styles/app.css` — Bridges tokens into Tailwind CSS v4 via `@theme inline`, registers `@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));`, and styles the living aurora backdrop, frosted glass canvas, cursor-tracking spotlight cards, and top-layer dialogs
+- `src/config/shell-config.ts` — Single-file shell manifest configuring `APP_BRAND`, `PRIMARY_NAV`, and `ACCENT_PRESETS` across Sidebar, Topbar, Settings, and Command Palette simultaneously
 
 ### Pre-Paint Bootstrap & Zero-JS Safe CSS
 

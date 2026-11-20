@@ -45,13 +45,16 @@ cd src-tauri && cargo test  # Rust compilation & unit tests
 ├── GUIDE.md                       # Complete UI, motion, Tauri & TanStack engineering guide
 ├── index.html                     # Pre-paint anti-FOUC bootstrap
 ├── src/
+│   ├── config/
+│   │   └── shell-config.ts        # Single-file brand, primary nav & accent preset config
 │   ├── styles/
 │   │   ├── themes/
-│   │   │   ├── light.css          # Modular Light theme palette (WCAG AA verified)
-│   │   │   └── dark.css           # Modular Dark theme palette (WCAG AA verified)
-│   │   ├── tokens.css             # Theme bridge (color-scheme + light-dark()), density scale, --ease
-│   │   ├── app.css                # Tailwind v4 @theme + @custom-variant dark, shell grid, dialogs, View Transitions
-│   │   └── contrast.test.ts       # Automated WCAG AA (>= 4.5:1) & 1.4.11 contrast audit
+│   │   │   ├── light.css          # Daylight Pearl Frost Light theme
+│   │   │   ├── dark.css           # Midnight Prism Aurora Dark theme
+│   │   │   └── accents.css        # 4 Gradient Theme Worlds: Prism, Aurora, Hyper & Solar
+│   │   ├── tokens.css             # Theme bridge (color-scheme + light-dark()), 3-stop gradients, --ease
+│   │   ├── app.css                # Living aurora orbs, frosted glass canvas, spotlight cards, top-layer dialogs
+│   │   └── contrast.test.ts       # Automated WCAG AA (>= 4.5:1) & 1.4.11 contrast audit across all palettes & worlds
 │   ├── lib/
 │   │   ├── tauri-bridge.ts        # Typed Tauri invoke/event bridge + browser preview fallback
 │   │   ├── queries.ts             # TanStack Query keys & queryOptions

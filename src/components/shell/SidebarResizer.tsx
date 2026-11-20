@@ -36,6 +36,7 @@ export function SidebarResizer() {
     const pointerId = event.pointerId;
 
     setDragging(true);
+    shellStore.actions.setSidebarResizing(true);
     handle.setPointerCapture(pointerId);
 
     const onMove = (moveEvent: PointerEvent) => {
@@ -48,6 +49,7 @@ export function SidebarResizer() {
 
     const cleanup = () => {
       setDragging(false);
+      shellStore.actions.setSidebarResizing(false);
       handle.removeEventListener("pointermove", onMove);
       handle.removeEventListener("pointerup", onFinish);
       handle.removeEventListener("pointercancel", onFinish);

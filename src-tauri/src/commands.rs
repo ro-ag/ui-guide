@@ -67,8 +67,8 @@ pub fn list_starter_items() -> Vec<StarterItem> {
 #[tauri::command]
 pub fn set_native_theme(app: AppHandle, theme: String) -> Result<(), String> {
     let (native_theme, background) = match theme.as_str() {
-        "dark" => (Some(Theme::Dark), Some(Color(8, 11, 17, 255))),
-        "light" => (Some(Theme::Light), Some(Color(245, 246, 248, 255))),
+        "dark" => (Some(Theme::Dark), Some(Color(7, 8, 17, 255))),
+        "light" => (Some(Theme::Light), Some(Color(243, 245, 252, 255))),
         "system" => (None, None),
         _ => return Err(format!("unsupported theme value: {theme}")),
     };
@@ -79,8 +79,8 @@ pub fn set_native_theme(app: AppHandle, theme: String) -> Result<(), String> {
             let _ = window.set_background_color(Some(bg));
         } else if let Ok(resolved) = window.theme() {
             let bg = match resolved {
-                Theme::Light => Color(245, 246, 248, 255),
-                _ => Color(8, 11, 17, 255),
+                Theme::Light => Color(243, 245, 252, 255),
+                _ => Color(7, 8, 17, 255),
             };
             let _ = window.set_background_color(Some(bg));
         }

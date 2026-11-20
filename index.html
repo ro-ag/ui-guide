@@ -25,6 +25,11 @@
               : "dark";
           }
 
+          const accent = localStorage.getItem("shell-accent");
+          if (accent === "aurora" || accent === "hyper" || accent === "solar") {
+            document.documentElement.dataset.accent = accent;
+          }
+
           const density = localStorage.getItem("shell-density");
           if (density === "compact") {
             document.documentElement.dataset.density = "compact";
@@ -55,7 +60,7 @@
         }
       })();
     </script>
-    <title>Tauri Canvas Shell</title>
+    <title>Prism — Tauri Studio Shell</title>
   </head>
   <body>
     <div id="root"></div>

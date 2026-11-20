@@ -1,76 +1,83 @@
 /*
- * Dark Theme Palette (WCAG AA >= 4.5:1 text & button contrast, >= 3.0:1 scrollbars)
- *
- * Edit these `--dark-*` primitives to reskin Dark Mode globally.
- * Run `npm test` after any edit to verify all contrast contracts automatically.
+ * Dark Theme Palette — "Midnight Prism Aurora"
+ * Smoked obsidian glass hovering over a living violet-cyan-magenta aurora mesh.
+ * (WCAG AA >= 4.5:1 text & button contrast, >= 3.0:1 scrollbars)
  */
 
 :root {
-  --dark-night: #080b11;
-  --dark-canvas-bg: #10151e;
-  --dark-surface: #10151e;
-  --dark-surface-raised: #151c27;
-  --dark-surface-soft: #0d1219;
-  --dark-surface-hover: #1a2230;
-  --dark-dialog-bg: #131924;
-  --dark-drawer-bg: rgba(15, 20, 28, 0.92);
-  --dark-topbar-bg: rgba(8, 11, 17, 0.72);
-  --dark-overlay-bg: rgba(21, 28, 39, 0.92);
-  --dark-dock-bg: #090d12;
-  --dark-line: rgba(255, 255, 255, 0.075);
-  --dark-line-subtle: rgba(255, 255, 255, 0.05);
-  --dark-line-strong: rgba(255, 255, 255, 0.13);
-  --dark-control-border: #687386;
-  --dark-text: #e8ecf3;
-  --dark-text-soft: #b9c2d4;
-  --dark-muted: #8f99ae;
-  --dark-faint: #848ea3;
-  --dark-placeholder: #848ea3;
-  --dark-accent: #3dd6a3;
-  --dark-accent-text: #3dd6a3;
-  --dark-accent-strong: #62e8ba;
-  --dark-accent-dim: #2aa7a1;
-  --dark-ink: #06231a;
-  --dark-info: #5fafff;
-  --dark-todo: #a89fff;
-  --dark-doing: #ffd75f;
-  --dark-blocked: #ff5f87;
-  --dark-blocked-strong: #c22a5a;
-  --dark-done: #5fff87;
-  --dark-nav-active-bg: rgba(61, 214, 163, 0.12);
-  --dark-nav-active-text: #e8ecf3;
-  --dark-fill-subtle: rgba(255, 255, 255, 0.025);
-  --dark-fill: rgba(255, 255, 255, 0.035);
-  --dark-fill-hover: rgba(255, 255, 255, 0.055);
-  --dark-fill-strong: rgba(255, 255, 255, 0.08);
-  --dark-input-bg: rgba(4, 7, 11, 0.65);
-  --dark-input-bg-focus: rgba(4, 7, 11, 0.85);
-  --dark-control-solid-bg: rgba(9, 13, 19, 0.85);
-  --dark-backdrop-bg: rgba(3, 5, 8, 0.68);
-  --dark-drawer-scrim: rgba(3, 5, 8, 0.36);
-  --dark-toast-bg: rgba(58, 20, 30, 0.88);
-  --dark-toast-text: #ffd9e2;
-  --dark-scrollbar-thumb: #667287;
-  --dark-scrollbar-thumb-hover: #8391aa;
-  --dark-button-stop-1: #4fe3b2;
-  --dark-button-stop-2: #2fbd90;
-  --dark-button-hover-1: #68ecc0;
-  --dark-button-hover-2: #3acc9c;
-  --dark-glow-1: rgba(61, 214, 163, 0.07);
-  --dark-glow-2: rgba(99, 102, 241, 0.06);
-  --dark-sheen: rgba(255, 255, 255, 0.035);
-  --dark-shadow-a: rgba(0, 0, 0, 0.3);
-  --dark-shadow-b: rgba(0, 0, 0, 0.25);
-  --dark-shadow-deep: rgba(0, 0, 0, 0.45);
-  --dark-accent-soft: rgba(61, 214, 163, 0.12);
-  --dark-accent-ring: rgba(61, 214, 163, 0.24);
-  --dark-accent-border: rgba(61, 214, 163, 0.55);
-  --dark-accent-glow: rgba(61, 214, 163, 0.35);
+  --dark-night: #070811;
+  --dark-canvas-bg: #0f111d;
+  --dark-canvas-glass: rgba(15, 17, 29, 0.8);
+  --dark-surface: #0f111d;
+  --dark-surface-raised: #151829;
+  --dark-surface-soft: #0c0e18;
+  --dark-surface-hover: #1c2036;
+  --dark-dialog-bg: #131625;
+  --dark-drawer-bg: rgba(17, 20, 35, 0.88);
+  --dark-topbar-bg: rgba(15, 17, 29, 0.62);
+  --dark-overlay-bg: rgba(21, 24, 41, 0.9);
+  --dark-dock-bg: rgba(10, 12, 22, 0.88);
+  --dark-line: rgba(226, 232, 255, 0.095);
+  --dark-line-subtle: rgba(226, 232, 255, 0.055);
+  --dark-line-strong: rgba(226, 232, 255, 0.165);
+  --dark-control-border: #6b7394;
+  --dark-text: #f2f4ff;
+  --dark-text-soft: #c6cce6;
+  --dark-muted: #939cb8;
+  --dark-faint: #8891ad;
+  --dark-placeholder: #8891ad;
+  --dark-accent: #a78bfa;
+  --dark-accent-text: #b89bff;
+  --dark-accent-strong: #c4b5fd;
+  --dark-accent-dim: #38bdf8;
+  --dark-ink: #09061a;
+  --dark-info: #60a5fa;
+  --dark-todo: #c084fc;
+  --dark-doing: #fbbf24;
+  --dark-blocked: #fb7185;
+  --dark-blocked-strong: #be123c;
+  --dark-done: #4ade80;
+  --dark-nav-active-bg: rgba(167, 139, 250, 0.16);
+  --dark-nav-active-text: #f2f4ff;
+  --dark-fill-subtle: rgba(226, 232, 255, 0.03);
+  --dark-fill: rgba(226, 232, 255, 0.05);
+  --dark-fill-hover: rgba(226, 232, 255, 0.08);
+  --dark-fill-strong: rgba(226, 232, 255, 0.115);
+  --dark-input-bg: rgba(7, 8, 17, 0.65);
+  --dark-input-bg-focus: rgba(7, 8, 17, 0.85);
+  --dark-control-solid-bg: rgba(12, 14, 24, 0.92);
+  --dark-backdrop-bg: rgba(4, 5, 12, 0.72);
+  --dark-drawer-scrim: rgba(4, 5, 12, 0.36);
+  --dark-toast-bg: rgba(56, 18, 36, 0.9);
+  --dark-toast-text: #ffd6e5;
+  --dark-scrollbar-thumb: #6d7694;
+  --dark-scrollbar-thumb-hover: #8e97b8;
+  /* 3-stop luminous iridescent gradient stops */
+  --dark-button-stop-1: #c084fc;
+  --dark-button-stop-2: #818cf8;
+  --dark-button-stop-3: #38bdf8;
+  --dark-button-hover-1: #d8b4fe;
+  --dark-button-hover-2: #a5b4fc;
+  --dark-button-hover-3: #7dd3fc;
+  /* Living aurora backdrop orbs */
+  --dark-orb-1: rgba(139, 92, 246, 0.28);
+  --dark-orb-2: rgba(56, 189, 248, 0.22);
+  --dark-orb-3: rgba(236, 72, 153, 0.16);
+  --dark-spotlight: rgba(167, 139, 250, 0.15);
+  --dark-sheen: rgba(255, 255, 255, 0.065);
+  --dark-shadow-a: rgba(0, 0, 0, 0.38);
+  --dark-shadow-b: rgba(4, 5, 18, 0.45);
+  --dark-shadow-deep: rgba(0, 0, 0, 0.6);
+  --dark-accent-soft: rgba(167, 139, 250, 0.16);
+  --dark-accent-ring: rgba(167, 139, 250, 0.34);
+  --dark-accent-border: rgba(167, 139, 250, 0.52);
+  --dark-accent-glow: rgba(139, 92, 246, 0.42);
 
   /* Fallback OS dark media query for WebViews without CSS light-dark(). */
   @media (prefers-color-scheme: dark) {
     --night: var(--dark-night);
     --canvas-bg: var(--dark-canvas-bg);
+    --canvas-glass: var(--dark-canvas-glass);
     --surface: var(--dark-surface);
     --surface-raised: var(--dark-surface-raised);
     --surface-soft: var(--dark-surface-soft);
@@ -117,10 +124,14 @@
     --scrollbar-thumb-hover: var(--dark-scrollbar-thumb-hover);
     --button-stop-1: var(--dark-button-stop-1);
     --button-stop-2: var(--dark-button-stop-2);
+    --button-stop-3: var(--dark-button-stop-3);
     --button-hover-1: var(--dark-button-hover-1);
     --button-hover-2: var(--dark-button-hover-2);
-    --glow-1: var(--dark-glow-1);
-    --glow-2: var(--dark-glow-2);
+    --button-hover-3: var(--dark-button-hover-3);
+    --orb-1: var(--dark-orb-1);
+    --orb-2: var(--dark-orb-2);
+    --orb-3: var(--dark-orb-3);
+    --spotlight: var(--dark-spotlight);
     --sheen: var(--dark-sheen);
     --shadow-a: var(--dark-shadow-a);
     --shadow-b: var(--dark-shadow-b);
@@ -137,6 +148,7 @@
     color-scheme: dark;
     --night: var(--dark-night);
     --canvas-bg: var(--dark-canvas-bg);
+    --canvas-glass: var(--dark-canvas-glass);
     --surface: var(--dark-surface);
     --surface-raised: var(--dark-surface-raised);
     --surface-soft: var(--dark-surface-soft);
@@ -183,10 +195,14 @@
     --scrollbar-thumb-hover: var(--dark-scrollbar-thumb-hover);
     --button-stop-1: var(--dark-button-stop-1);
     --button-stop-2: var(--dark-button-stop-2);
+    --button-stop-3: var(--dark-button-stop-3);
     --button-hover-1: var(--dark-button-hover-1);
     --button-hover-2: var(--dark-button-hover-2);
-    --glow-1: var(--dark-glow-1);
-    --glow-2: var(--dark-glow-2);
+    --button-hover-3: var(--dark-button-hover-3);
+    --orb-1: var(--dark-orb-1);
+    --orb-2: var(--dark-orb-2);
+    --orb-3: var(--dark-orb-3);
+    --spotlight: var(--dark-spotlight);
     --sheen: var(--dark-sheen);
     --shadow-a: var(--dark-shadow-a);
     --shadow-b: var(--dark-shadow-b);

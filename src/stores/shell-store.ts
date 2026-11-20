@@ -1,4 +1,5 @@
 import { createStore } from "@tanstack/react-store";
+import type { AccentPreset } from "../config/shell-config";
 import {
   DEFAULT_SIDEBAR_WIDTH,
   SIDEBAR_HIDDEN_KEY,
@@ -17,9 +18,11 @@ import {
   type DensityPreference,
   type ResolvedTheme,
   type ThemePreference,
+  applyAccentPreset,
   applyDensityPreference,
   applyThemePreference,
   nextQuickTogglePreference,
+  readStoredAccentPreset,
   readStoredDensityPreference,
   readStoredThemePreference,
   readSystemTheme,
@@ -38,10 +41,12 @@ export interface ToastNotice {
 export interface ShellState {
   sidebarWidth: number;
   sidebarHidden: boolean;
+  sidebarResizing: boolean;
   selectedItemId: string;
   bottomDockOpen: boolean;
   themePreference: ThemePreference;
   resolvedTheme: ResolvedTheme;
+  accent: AccentPreset;
   density: DensityPreference;
   reducedMotion: ReducedMotionPreference;
   settingsOpen: boolean;
@@ -63,10 +68,12 @@ function initialShellState(): ShellState {
       viewportWidth,
     ),
     sidebarHidden: safeStorageGet(SIDEBAR_HIDDEN_KEY) === "true",
+    sidebarResizing: false,
     selectedItemId: "item-1",
     bottomDockOpen: false,
     themePreference,
     resolvedTheme: resolveTheme(themePreference, systemTheme),
+    accent: readStoredAccentPreset(),
     density: readStoredDensityPreference(),
     reducedMotion: readStoredReducedMotion(),
     settingsOpen: false,
@@ -138,6 +145,14 @@ export const shellStore = createStore(
       setState((prev) => ({ ...prev, sidebarHidden: next }));
     },
 
+    setSidebarResizing(resizing: boolean) {
+      setState((prev) =>
+        prev.sidebarResizing === resizing
+          ? prev
+          : { ...prev, sidebarResizing: resizing },
+      );
+    },
+
     selectItem(itemId: string) {
       setState((prev) => ({ ...prev, selectedItemId: itemId }));
     },
@@ -180,6 +195,11 @@ export const shellStore = createStore(
     setDensity(density: DensityPreference) {
       applyDensityPreference(density);
       setState((prev) => ({ ...prev, density }));
+    },
+
+    setAccent(accent: AccentPreset) {
+      applyAccentPreset(accent);
+      setState((prev) => ({ ...prev, accent }));
     },
 
     setReducedMotion(reducedMotion: ReducedMotionPreference) {

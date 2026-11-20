@@ -1,77 +1,82 @@
 /*
- * Light Theme Palette (WCAG AA >= 4.5:1 text & button contrast, >= 3.0:1 scrollbars)
- *
- * Edit these `--light-*` primitives to reskin Light Mode globally.
- * Run `npm test` after any edit to verify all contrast contracts automatically.
+ * Light Theme Palette — "Daylight Pearl Frost"
+ * Luminous cool-pearl glass hovering over a soft iridescent aurora mesh.
+ * (WCAG AA >= 4.5:1 text & button contrast, >= 3.0:1 scrollbars)
  */
 
 :root {
-  --light-night: #f5f6f8;
+  --light-night: #f3f5fc;
   --light-canvas-bg: #ffffff;
+  --light-canvas-glass: rgba(255, 255, 255, 0.82);
   --light-surface: #ffffff;
-  --light-surface-raised: #ffffff;
-  --light-surface-soft: #f0f2f6;
-  --light-surface-hover: #eef1f6;
-  --light-dialog-bg: #ffffff;
-  --light-drawer-bg: rgba(255, 255, 255, 0.94);
-  --light-topbar-bg: rgba(245, 246, 248, 0.78);
-  --light-overlay-bg: rgba(255, 255, 255, 0.94);
-  --light-dock-bg: #f6f7f9;
-  --light-line: rgba(15, 23, 42, 0.12);
-  --light-line-subtle: rgba(15, 23, 42, 0.08);
-  --light-line-strong: rgba(15, 23, 42, 0.2);
-  --light-control-border: #7a8494;
-  --light-text: #1a2230;
-  --light-text-soft: #3d4757;
-  --light-muted: #4f5b70;
-  --light-faint: #5c687d;
-  --light-placeholder: #5c687d;
-  --light-accent: #0d9668;
-  /* Fill accent is 3.8:1 on white; text accent uses darker step (>= 5.4:1). */
-  --light-accent-text: #0a7a54;
-  --light-accent-strong: #0a7a54;
-  --light-accent-dim: #0f766e;
+  --light-surface-raised: #f9faff;
+  --light-surface-soft: #f1f4fc;
+  --light-surface-hover: #e9eefb;
+  --light-dialog-bg: #fcfdff;
+  --light-drawer-bg: rgba(252, 253, 255, 0.9);
+  --light-topbar-bg: rgba(255, 255, 255, 0.68);
+  --light-overlay-bg: rgba(255, 255, 255, 0.92);
+  --light-dock-bg: rgba(244, 247, 255, 0.88);
+  --light-line: rgba(30, 41, 82, 0.1);
+  --light-line-subtle: rgba(30, 41, 82, 0.065);
+  --light-line-strong: rgba(30, 41, 82, 0.18);
+  --light-control-border: #7d86a8;
+  --light-text: #14182b;
+  --light-text-soft: #3a4161;
+  --light-muted: #4e5678;
+  --light-faint: #5c6487;
+  --light-placeholder: #5c6487;
+  --light-accent: #6366f1;
+  --light-accent-text: #5b35d5;
+  --light-accent-strong: #4f46e5;
+  --light-accent-dim: #0284c7;
   --light-ink: #ffffff;
-  --light-info: #1d6fc5;
-  --light-todo: #6d5fd3;
-  --light-doing: #a16207;
-  --light-blocked: #d63363;
-  --light-blocked-strong: #c92a58;
-  --light-done: #16a34a;
-  --light-nav-active-bg: rgba(13, 150, 104, 0.1);
-  --light-nav-active-text: #1a2230;
-  --light-fill-subtle: rgba(15, 23, 42, 0.03);
-  --light-fill: rgba(15, 23, 42, 0.045);
-  --light-fill-hover: rgba(15, 23, 42, 0.065);
-  --light-fill-strong: rgba(15, 23, 42, 0.09);
-  --light-input-bg: #ffffff;
+  --light-info: #0369a1;
+  --light-todo: #7c3aed;
+  --light-doing: #b45309;
+  --light-blocked: #be123c;
+  --light-blocked-strong: #9f1239;
+  --light-done: #0f766e;
+  --light-nav-active-bg: rgba(99, 102, 241, 0.12);
+  --light-nav-active-text: #14182b;
+  --light-fill-subtle: rgba(30, 41, 82, 0.03);
+  --light-fill: rgba(30, 41, 82, 0.05);
+  --light-fill-hover: rgba(30, 41, 82, 0.075);
+  --light-fill-strong: rgba(30, 41, 82, 0.105);
+  --light-input-bg: rgba(255, 255, 255, 0.9);
   --light-input-bg-focus: #ffffff;
   --light-control-solid-bg: #ffffff;
-  --light-backdrop-bg: rgba(15, 23, 42, 0.34);
-  --light-drawer-scrim: rgba(15, 23, 42, 0.16);
-  --light-toast-bg: rgba(254, 242, 245, 0.95);
-  --light-toast-text: #a41e44;
-  --light-scrollbar-thumb: #8490a3;
-  --light-scrollbar-thumb-hover: #647187;
-  /* White button ink requires >= 4.5:1 against every stop of the button fill. */
-  --light-button-stop-1: #0b8259;
-  --light-button-stop-2: #0a7350;
-  --light-button-hover-1: #0c875d;
-  --light-button-hover-2: #0b7d56;
-  --light-glow-1: rgba(13, 150, 104, 0.08);
-  --light-glow-2: rgba(99, 102, 241, 0.05);
-  --light-sheen: rgba(255, 255, 255, 0.55);
-  --light-shadow-a: rgba(15, 23, 42, 0.06);
-  --light-shadow-b: rgba(15, 23, 42, 0.09);
-  --light-shadow-deep: rgba(15, 23, 42, 0.16);
-  --light-accent-soft: rgba(13, 150, 104, 0.12);
-  --light-accent-ring: rgba(13, 150, 104, 0.3);
-  --light-accent-border: rgba(13, 150, 104, 0.55);
-  --light-accent-glow: rgba(13, 150, 104, 0.28);
+  --light-backdrop-bg: rgba(20, 24, 43, 0.28);
+  --light-drawer-scrim: rgba(20, 24, 43, 0.14);
+  --light-toast-bg: rgba(255, 241, 245, 0.95);
+  --light-toast-text: #9f1239;
+  --light-scrollbar-thumb: #7f88a8;
+  --light-scrollbar-thumb-hover: #5e6788;
+  /* 3-stop iridescent gradient stops (every stop clears WCAG AA >= 4.5:1 with white ink) */
+  --light-button-stop-1: #6d28d9;
+  --light-button-stop-2: #4f46e5;
+  --light-button-stop-3: #0369a1;
+  --light-button-hover-1: #5b21b6;
+  --light-button-hover-2: #4338ca;
+  --light-button-hover-3: #075985;
+  /* Living aurora backdrop orbs */
+  --light-orb-1: rgba(124, 58, 237, 0.2);
+  --light-orb-2: rgba(14, 165, 233, 0.18);
+  --light-orb-3: rgba(236, 72, 153, 0.13);
+  --light-spotlight: rgba(99, 102, 241, 0.11);
+  --light-sheen: rgba(255, 255, 255, 0.85);
+  --light-shadow-a: rgba(30, 41, 82, 0.055);
+  --light-shadow-b: rgba(79, 70, 229, 0.09);
+  --light-shadow-deep: rgba(20, 24, 43, 0.18);
+  --light-accent-soft: rgba(99, 102, 241, 0.11);
+  --light-accent-ring: rgba(99, 102, 241, 0.28);
+  --light-accent-border: rgba(99, 102, 241, 0.48);
+  --light-accent-glow: rgba(99, 102, 241, 0.28);
 
   /* Fallback semantic assignments for WebViews without CSS light-dark(). */
   --night: var(--light-night);
   --canvas-bg: var(--light-canvas-bg);
+  --canvas-glass: var(--light-canvas-glass);
   --surface: var(--light-surface);
   --surface-raised: var(--light-surface-raised);
   --surface-soft: var(--light-surface-soft);
@@ -118,10 +123,14 @@
   --scrollbar-thumb-hover: var(--light-scrollbar-thumb-hover);
   --button-stop-1: var(--light-button-stop-1);
   --button-stop-2: var(--light-button-stop-2);
+  --button-stop-3: var(--light-button-stop-3);
   --button-hover-1: var(--light-button-hover-1);
   --button-hover-2: var(--light-button-hover-2);
-  --glow-1: var(--light-glow-1);
-  --glow-2: var(--light-glow-2);
+  --button-hover-3: var(--light-button-hover-3);
+  --orb-1: var(--light-orb-1);
+  --orb-2: var(--light-orb-2);
+  --orb-3: var(--light-orb-3);
+  --spotlight: var(--light-spotlight);
   --sheen: var(--light-sheen);
   --shadow-a: var(--light-shadow-a);
   --shadow-b: var(--light-shadow-b);
@@ -137,6 +146,7 @@
     color-scheme: light;
     --night: var(--light-night);
     --canvas-bg: var(--light-canvas-bg);
+    --canvas-glass: var(--light-canvas-glass);
     --surface: var(--light-surface);
     --surface-raised: var(--light-surface-raised);
     --surface-soft: var(--light-surface-soft);
@@ -183,10 +193,14 @@
     --scrollbar-thumb-hover: var(--light-scrollbar-thumb-hover);
     --button-stop-1: var(--light-button-stop-1);
     --button-stop-2: var(--light-button-stop-2);
+    --button-stop-3: var(--light-button-stop-3);
     --button-hover-1: var(--light-button-hover-1);
     --button-hover-2: var(--light-button-hover-2);
-    --glow-1: var(--light-glow-1);
-    --glow-2: var(--light-glow-2);
+    --button-hover-3: var(--light-button-hover-3);
+    --orb-1: var(--light-orb-1);
+    --orb-2: var(--light-orb-2);
+    --orb-3: var(--light-orb-3);
+    --spotlight: var(--light-spotlight);
     --sheen: var(--light-sheen);
     --shadow-a: var(--light-shadow-a);
     --shadow-b: var(--light-shadow-b);

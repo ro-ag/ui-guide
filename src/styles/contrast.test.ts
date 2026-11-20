@@ -2,11 +2,10 @@ import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 
-function parsePrefixTokens(prefix: "light" | "dark"): Record<string, string> {
-  const source = readFileSync(
-    resolve(import.meta.dirname, `themes/${prefix}.css`),
-    "utf8",
-  );
+function parseTokensFromText(
+  source: string,
+  prefix: "light" | "dark",
+): Record<string, string> {
   const tokens: Record<string, string> = {};
   const pattern = new RegExp(`--${prefix}-([\\w-]+):\\s*([^;]+);`, "g");
   for (const match of source.matchAll(pattern)) {
@@ -15,14 +14,39 @@ function parsePrefixTokens(prefix: "light" | "dark"): Record<string, string> {
   return tokens;
 }
 
-const light = parsePrefixTokens("light");
-const dark = parsePrefixTokens("dark");
+function parseThemeFile(prefix: "light" | "dark"): Record<string, string> {
+  const source = readFileSync(
+    resolve(import.meta.dirname, `themes/${prefix}.css`),
+    "utf8",
+  );
+  return parseTokensFromText(source, prefix);
+}
+
+function parseAccentOverrides(
+  accent: "aurora" | "hyper" | "solar",
+  prefix: "light" | "dark",
+): Record<string, string> {
+  const source = readFileSync(
+    resolve(import.meta.dirname, "themes/accents.css"),
+    "utf8",
+  );
+  const marker = `:root[data-accent="${accent}"] {`;
+  const start = source.indexOf(marker);
+  if (start < 0) throw new Error(`missing accent block ${accent}`);
+  const end = source.indexOf("\n}", start);
+  return parseTokensFromText(source.slice(start, end), prefix);
+}
+
+const light = parseThemeFile("light");
+const dark = parseThemeFile("dark");
 
 function hexColor(tokens: Record<string, string>, name: string): string {
   const value = tokens[name];
   if (!value) throw new Error(`missing token ${name}`);
   const match = value.match(/#[0-9a-f]{6}\b/i);
-  if (!match) throw new Error(`token ${name} (${value}) is not a 6-digit hex color`);
+  if (!match) {
+    throw new Error(`token ${name} (${value}) is not a 6-digit hex color`);
+  }
   return match[0];
 }
 
@@ -59,8 +83,10 @@ const surfaceTokens = [
 const buttonStopTokens = [
   "button-stop-1",
   "button-stop-2",
+  "button-stop-3",
   "button-hover-1",
   "button-hover-2",
+  "button-hover-3",
 ] as const;
 
 describe("design token WCAG contrast contracts", () => {
@@ -99,5 +125,28 @@ describe("design token WCAG contrast contracts", () => {
         ),
       ).toBeGreaterThanOrEqual(3.0);
     });
+
+    for (const accent of ["aurora", "hyper", "solar"] as const) {
+      const merged = { ...palette, ...parseAccentOverrides(accent, mode) };
+
+      for (const surface of surfaceTokens) {
+        it(`${mode} [${accent}]: accent-text on ${surface} >= 4.5:1`, () => {
+          expect(
+            contrastRatio(
+              hexColor(merged, "accent-text"),
+              hexColor(merged, surface),
+            ),
+          ).toBeGreaterThanOrEqual(4.5);
+        });
+      }
+
+      for (const stop of buttonStopTokens) {
+        it(`${mode} [${accent}]: button ink on ${stop} >= 4.5:1`, () => {
+          expect(
+            contrastRatio(hexColor(merged, "ink"), hexColor(merged, stop)),
+          ).toBeGreaterThanOrEqual(4.5);
+        });
+      }
+    }
   }
 });

@@ -1,4 +1,6 @@
+import type { AccentPreset } from "../config/shell-config";
 import { safeStorageGet, safeStorageSet } from "./layout";
+import { isReducedMotionDomActive } from "./motion";
 import { tauriBridge } from "./tauri-bridge";
 
 export type ThemePreference = "system" | "dark" | "light";
@@ -7,6 +9,7 @@ export type DensityPreference = "comfortable" | "compact";
 
 export const COLOR_SCHEME_KEY = "shell-color-scheme";
 export const DENSITY_KEY = "shell-density";
+export const ACCENT_KEY = "shell-accent";
 
 export function readSystemTheme(): ResolvedTheme {
   if (typeof window === "undefined") return "dark";
@@ -48,29 +51,54 @@ export function readStoredDensityPreference(): DensityPreference {
   return safeStorageGet(DENSITY_KEY) === "compact" ? "compact" : "comfortable";
 }
 
-export function applyThemePreference(preference: ThemePreference): ResolvedTheme {
+/**
+ * Wraps theme or gradient-world DOM updates in a View Transition dissolve
+ * when supported and motion is allowed.
+ */
+export function withThemeTransition(apply: () => void): void {
+  if (
+    typeof document !== "undefined" &&
+    "startViewTransition" in document &&
+    typeof document.startViewTransition === "function" &&
+    !isReducedMotionDomActive()
+  ) {
+    document.startViewTransition(apply);
+  } else {
+    apply();
+  }
+}
+
+export function applyThemePreference(
+  preference: ThemePreference,
+  animate = true,
+): ResolvedTheme {
   const systemTheme = readSystemTheme();
   const resolved = resolveTheme(preference, systemTheme);
 
-  const meta = document.querySelector<HTMLMetaElement>(
-    'meta[name="color-scheme"]',
-  );
-  if (meta) {
-    meta.content = preference === "system" ? "light dark" : preference;
-  }
+  const commit = () => {
+    const meta = document.querySelector<HTMLMetaElement>(
+      'meta[name="color-scheme"]',
+    );
+    if (meta) {
+      meta.content = preference === "system" ? "light dark" : preference;
+    }
 
-  document.documentElement.dataset.theme = resolved;
-  if (preference === "system") {
-    document.documentElement.removeAttribute("data-theme-override");
-  } else {
-    document.documentElement.dataset.themeOverride = preference;
-  }
-  safeStorageSet(
-    COLOR_SCHEME_KEY,
-    preference === "system" ? null : preference,
-  );
+    document.documentElement.dataset.theme = resolved;
+    if (preference === "system") {
+      document.documentElement.removeAttribute("data-theme-override");
+    } else {
+      document.documentElement.dataset.themeOverride = preference;
+    }
+    safeStorageSet(
+      COLOR_SCHEME_KEY,
+      preference === "system" ? null : preference,
+    );
+  };
 
-  // Sync native macOS/Windows titlebar & dialog chrome when running inside Tauri.
+  if (animate) withThemeTransition(commit);
+  else commit();
+
+  // Sync native macOS/Windows titlebar & window backing color inside Tauri.
   void tauriBridge.setNativeTheme(preference);
   return resolved;
 }
@@ -83,4 +111,27 @@ export function applyDensityPreference(density: DensityPreference): void {
     document.documentElement.removeAttribute("data-density");
     safeStorageSet(DENSITY_KEY, null);
   }
+}
+
+export function readStoredAccentPreset(): AccentPreset {
+  const stored = safeStorageGet(ACCENT_KEY);
+  if (stored === "aurora" || stored === "hyper" || stored === "solar") {
+    return stored;
+  }
+  return "prism";
+}
+
+export function applyAccentPreset(accent: AccentPreset, animate = true): void {
+  const commit = () => {
+    if (accent === "prism") {
+      document.documentElement.removeAttribute("data-accent");
+      safeStorageSet(ACCENT_KEY, null);
+    } else {
+      document.documentElement.dataset.accent = accent;
+      safeStorageSet(ACCENT_KEY, accent);
+    }
+  };
+
+  if (animate) withThemeTransition(commit);
+  else commit();
 }

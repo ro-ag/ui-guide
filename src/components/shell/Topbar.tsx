@@ -1,13 +1,8 @@
 import { useRouterState } from "@tanstack/react-router";
 import { useSelector } from "@tanstack/react-store";
-import { Moon, PanelLeft, PanelRight, Search, Sun } from "lucide-react";
+import { Moon, PanelLeft, PanelRight, Search, Settings, Sun } from "lucide-react";
+import { routeTitleForPath } from "../../config/shell-config";
 import { shellStore } from "../../stores/shell-store";
-
-const ROUTE_TITLES: Record<string, string> = {
-  "/": "Home",
-  "/workspace": "Workspace",
-  "/activity": "Activity",
-};
 
 export function Topbar() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
@@ -15,29 +10,19 @@ export function Topbar() {
   const inspectorOpen = useSelector(shellStore, (s) => s.inspectorOpen);
   const resolvedTheme = useSelector(shellStore, (s) => s.resolvedTheme);
 
-  const routeLabel = ROUTE_TITLES[pathname] ?? "View";
+  const routeLabel = routeTitleForPath(pathname);
 
   return (
     <header className="app-topbar" data-tauri-drag-region="">
-      <div className="pointer-events-none flex min-w-0 items-center gap-2">
-        <span className="truncate text-xs font-semibold text-ink-muted">
-          {routeLabel}
-        </span>
-      </div>
-
-      {/* Compact segmented panel controls cluster (matches p-track's topbar) */}
-      <div
-        role="group"
-        aria-label="Workspace view controls"
-        className="flex shrink-0 items-center gap-[3px] rounded-[9px] border border-line-subtle bg-fill-subtle p-[2px]"
-      >
+      {/* Left: Sidebar toggle + active view breadcrumb */}
+      <div className="flex min-w-0 items-center gap-2">
         <button
           type="button"
           onClick={() => shellStore.actions.toggleSidebar()}
           aria-expanded={!sidebarHidden}
           aria-label={sidebarHidden ? "Show sidebar" : "Hide sidebar"}
           title={sidebarHidden ? "Show sidebar — ⌘\\" : "Hide sidebar — ⌘\\"}
-          className={`topbar-toggle grid h-[26px] w-[28px] place-items-center rounded-md transition-colors duration-150 ease-shell ${
+          className={`topbar-toggle grid h-7 w-7 shrink-0 place-items-center rounded-lg transition-colors duration-150 ease-shell ${
             !sidebarHidden
               ? "bg-accent-soft text-accent-text"
               : "text-ink-muted hover:bg-fill-strong hover:text-ink-primary"
@@ -46,13 +31,40 @@ export function Topbar() {
           <PanelLeft className="h-3.5 w-3.5" aria-hidden="true" />
         </button>
 
+        <span className="pointer-events-none truncate rounded-md bg-fill-subtle px-2 py-0.5 text-xs font-semibold text-ink-soft">
+          {routeLabel}
+        </span>
+      </div>
+
+      {/* Center: Interactive Command Palette Search Pill */}
+      <button
+        type="button"
+        onClick={() => shellStore.actions.setPaletteOpen(true)}
+        aria-label="Open command palette"
+        className="topbar-toggle flex h-7 w-[clamp(170px,28vw,300px)] items-center justify-between gap-2 rounded-full border border-line bg-surface-soft/80 px-3 text-xs text-ink-muted transition-colors duration-150 ease-shell hover:border-line-strong hover:bg-fill-hover hover:text-ink-primary"
+      >
+        <span className="flex min-w-0 items-center gap-2">
+          <Search className="h-3 w-3 shrink-0 text-accent-text" aria-hidden="true" />
+          <span className="truncate">Search or jump…</span>
+        </span>
+        <kbd className="shrink-0 rounded bg-fill-strong px-1.5 py-0.5 font-mono text-[0.625rem] text-ink-faint">
+          ⌘K
+        </kbd>
+      </button>
+
+      {/* Right: Compact utility capsule */}
+      <div
+        role="group"
+        aria-label="Workspace controls"
+        className="flex shrink-0 items-center justify-self-end gap-1"
+      >
         <button
           type="button"
           onClick={() => shellStore.actions.setInspectorOpen(!inspectorOpen)}
           aria-expanded={inspectorOpen}
           aria-label={inspectorOpen ? "Close inspector" : "Open inspector"}
           title="Toggle inspector — ⌘I"
-          className={`topbar-toggle grid h-[26px] w-[28px] place-items-center rounded-md transition-colors duration-150 ease-shell ${
+          className={`topbar-toggle grid h-7 w-7 place-items-center rounded-lg transition-colors duration-150 ease-shell ${
             inspectorOpen
               ? "bg-accent-soft text-accent-text"
               : "text-ink-muted hover:bg-fill-strong hover:text-ink-primary"
@@ -60,22 +72,6 @@ export function Topbar() {
         >
           <PanelRight className="h-3.5 w-3.5" aria-hidden="true" />
         </button>
-
-        <button
-          type="button"
-          onClick={() => shellStore.actions.setPaletteOpen(true)}
-          aria-label="Open command palette"
-          title="Command palette — ⌘K"
-          className="topbar-toggle grid h-[26px] w-[28px] place-items-center rounded-md text-ink-muted transition-colors duration-150 ease-shell hover:bg-fill-strong hover:text-ink-primary"
-        >
-          <Search className="h-3.5 w-3.5" aria-hidden="true" />
-        </button>
-
-        {/* Hairline separator sets the color-scheme control apart from layout toggles */}
-        <span
-          className="mx-0.5 h-3.5 w-px bg-line"
-          aria-hidden="true"
-        />
 
         <button
           type="button"
@@ -90,13 +86,23 @@ export function Topbar() {
               ? "Switch to light theme"
               : "Switch to dark theme"
           }
-          className="topbar-toggle grid h-[26px] w-[28px] place-items-center rounded-md text-ink-muted transition-colors duration-150 ease-shell hover:bg-fill-strong hover:text-ink-primary"
+          className="topbar-toggle grid h-7 w-7 place-items-center rounded-lg text-ink-muted transition-colors duration-150 ease-shell hover:bg-fill-strong hover:text-ink-primary"
         >
           {resolvedTheme === "dark" ? (
             <Sun className="h-3.5 w-3.5" aria-hidden="true" />
           ) : (
             <Moon className="h-3.5 w-3.5" aria-hidden="true" />
           )}
+        </button>
+
+        <button
+          type="button"
+          onClick={() => shellStore.actions.setSettingsOpen(true)}
+          aria-label="Open Settings"
+          title="Settings — ⌘,"
+          className="topbar-toggle icon-spin-hover grid h-7 w-7 place-items-center rounded-lg text-ink-muted transition-colors duration-150 ease-shell hover:bg-fill-strong hover:text-ink-primary"
+        >
+          <Settings className="h-3.5 w-3.5" aria-hidden="true" />
         </button>
       </div>
     </header>

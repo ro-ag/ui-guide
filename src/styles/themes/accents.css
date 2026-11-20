@@ -1,0 +1,141 @@
+/*
+ * Modular Gradient Theme Worlds
+ *
+ * Default world is "prism" (Electric Violet -> Indigo -> Cyan).
+ * Setting `data-accent="aurora" | "hyper" | "solar"` on `:root` transforms
+ * the entire 3-orb aurora backdrop, 3-stop iridescent button/badge gradients,
+ * spotlight hover glow, resizer laser beam, and active pill highlights across
+ * both Light and Dark themes while keeping WCAG AA (>= 4.5:1) contrast intact.
+ */
+
+:root[data-accent="aurora"] {
+  --light-accent: #0d9488;
+  --light-accent-text: #0d6e6e;
+  --light-accent-strong: #0f766e;
+  --light-accent-dim: #0369a1;
+  --light-ink: #ffffff;
+  --light-nav-active-bg: rgba(13, 148, 136, 0.12);
+  --light-button-stop-1: #0f766e;
+  --light-button-stop-2: #0369a1;
+  --light-button-stop-3: #4338ca;
+  --light-button-hover-1: #115e59;
+  --light-button-hover-2: #075985;
+  --light-button-hover-3: #3730a3;
+  --light-orb-1: rgba(20, 184, 166, 0.22);
+  --light-orb-2: rgba(56, 189, 248, 0.2);
+  --light-orb-3: rgba(129, 140, 248, 0.14);
+  --light-spotlight: rgba(13, 148, 136, 0.12);
+  --light-accent-soft: rgba(13, 148, 136, 0.11);
+  --light-accent-ring: rgba(13, 148, 136, 0.3);
+  --light-accent-border: rgba(13, 148, 136, 0.5);
+  --light-accent-glow: rgba(13, 148, 136, 0.3);
+
+  --dark-accent: #2dd4bf;
+  --dark-accent-text: #5eead4;
+  --dark-accent-strong: #99f6e4;
+  --dark-accent-dim: #38bdf8;
+  --dark-ink: #041a1d;
+  --dark-nav-active-bg: rgba(45, 212, 191, 0.16);
+  --dark-button-stop-1: #5eead4;
+  --dark-button-stop-2: #38bdf8;
+  --dark-button-stop-3: #818cf8;
+  --dark-button-hover-1: #99f6e4;
+  --dark-button-hover-2: #7dd3fc;
+  --dark-button-hover-3: #a5b4fc;
+  --dark-orb-1: rgba(45, 212, 191, 0.26);
+  --dark-orb-2: rgba(56, 189, 248, 0.24);
+  --dark-orb-3: rgba(139, 92, 246, 0.18);
+  --dark-spotlight: rgba(45, 212, 191, 0.16);
+  --dark-accent-soft: rgba(45, 212, 191, 0.15);
+  --dark-accent-ring: rgba(45, 212, 191, 0.34);
+  --dark-accent-border: rgba(45, 212, 191, 0.52);
+  --dark-accent-glow: rgba(45, 212, 191, 0.42);
+}
+
+:root[data-accent="hyper"] {
+  --light-accent: #c026d3;
+  --light-accent-text: #a21caf;
+  --light-accent-strong: #86198f;
+  --light-accent-dim: #be185d;
+  --light-ink: #ffffff;
+  --light-nav-active-bg: rgba(192, 38, 211, 0.12);
+  --light-button-stop-1: #be185d;
+  --light-button-stop-2: #a21caf;
+  --light-button-stop-3: #6d28d9;
+  --light-button-hover-1: #9d174d;
+  --light-button-hover-2: #86198f;
+  --light-button-hover-3: #5b21b6;
+  --light-orb-1: rgba(236, 72, 153, 0.2);
+  --light-orb-2: rgba(192, 38, 211, 0.18);
+  --light-orb-3: rgba(56, 189, 248, 0.15);
+  --light-spotlight: rgba(217, 70, 239, 0.12);
+  --light-accent-soft: rgba(192, 38, 211, 0.11);
+  --light-accent-ring: rgba(192, 38, 211, 0.3);
+  --light-accent-border: rgba(192, 38, 211, 0.5);
+  --light-accent-glow: rgba(217, 70, 239, 0.3);
+
+  --dark-accent: #f472b6;
+  --dark-accent-text: #f472b6;
+  --dark-accent-strong: #f9a8d4;
+  --dark-accent-dim: #c084fc;
+  --dark-ink: #1d0618;
+  --dark-nav-active-bg: rgba(244, 114, 182, 0.16);
+  --dark-button-stop-1: #f9a8d4;
+  --dark-button-stop-2: #e879f9;
+  --dark-button-stop-3: #a78bfa;
+  --dark-button-hover-1: #fbcfe8;
+  --dark-button-hover-2: #f0abfc;
+  --dark-button-hover-3: #c4b5fd;
+  --dark-orb-1: rgba(244, 114, 182, 0.28);
+  --dark-orb-2: rgba(192, 132, 252, 0.24);
+  --dark-orb-3: rgba(56, 189, 248, 0.18);
+  --dark-spotlight: rgba(244, 114, 182, 0.16);
+  --dark-accent-soft: rgba(244, 114, 182, 0.16);
+  --dark-accent-ring: rgba(244, 114, 182, 0.34);
+  --dark-accent-border: rgba(244, 114, 182, 0.52);
+  --dark-accent-glow: rgba(232, 121, 249, 0.42);
+}
+
+:root[data-accent="solar"] {
+  --light-accent: #e11d48;
+  --light-accent-text: #b43d18;
+  --light-accent-strong: #be123c;
+  --light-accent-dim: #c2410c;
+  --light-ink: #ffffff;
+  --light-nav-active-bg: rgba(234, 88, 12, 0.12);
+  --light-button-stop-1: #be123c;
+  --light-button-stop-2: #c2410c;
+  --light-button-stop-3: #b45309;
+  --light-button-hover-1: #9f1239;
+  --light-button-hover-2: #9a3412;
+  --light-button-hover-3: #92400e;
+  --light-orb-1: rgba(244, 63, 94, 0.2);
+  --light-orb-2: rgba(249, 115, 22, 0.18);
+  --light-orb-3: rgba(168, 85, 247, 0.14);
+  --light-spotlight: rgba(249, 115, 22, 0.12);
+  --light-accent-soft: rgba(234, 88, 12, 0.11);
+  --light-accent-ring: rgba(234, 88, 12, 0.3);
+  --light-accent-border: rgba(234, 88, 12, 0.5);
+  --light-accent-glow: rgba(244, 63, 94, 0.28);
+
+  --dark-accent: #fb923c;
+  --dark-accent-text: #fb923c;
+  --dark-accent-strong: #fdba74;
+  --dark-accent-dim: #fb7185;
+  --dark-ink: #1c0a04;
+  --dark-nav-active-bg: rgba(251, 146, 60, 0.16);
+  --dark-button-stop-1: #fda4af;
+  --dark-button-stop-2: #fb923c;
+  --dark-button-stop-3: #facc15;
+  --dark-button-hover-1: #fecdd3;
+  --dark-button-hover-2: #fdba74;
+  --dark-button-hover-3: #fde047;
+  --dark-orb-1: rgba(251, 113, 133, 0.28);
+  --dark-orb-2: rgba(251, 146, 60, 0.24);
+  --dark-orb-3: rgba(168, 85, 247, 0.18);
+  --dark-spotlight: rgba(251, 146, 60, 0.16);
+  --dark-accent-soft: rgba(251, 146, 60, 0.16);
+  --dark-accent-ring: rgba(251, 146, 60, 0.34);
+  --dark-accent-border: rgba(251, 146, 60, 0.52);
+  --dark-accent-glow: rgba(251, 113, 133, 0.42);
+}

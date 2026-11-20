@@ -1,6 +1,8 @@
 import { Link } from "@tanstack/react-router";
+import { motion } from "motion/react";
 import { type ReactNode, useEffect, useRef } from "react";
 import { bindRowNudge, isReducedMotionDomActive } from "../../lib/motion";
+import { SPRING_PILL } from "../ui/MotionPrimitives";
 
 interface SidebarNavItemProps {
   to: "/" | "/workspace" | "/activity";
@@ -36,13 +38,26 @@ export function SidebarNavItem({
       aria-current={active ? "page" : undefined}
       className="sidebar-row"
     >
-      <span className="shrink-0 opacity-80" aria-hidden="true">
+      {active ? (
+        <motion.span
+          layoutId="sidebar-active-nav"
+          transition={SPRING_PILL}
+          className="sidebar-active-pill"
+          aria-hidden="true"
+        />
+      ) : null}
+      <span
+        className={`relative z-10 shrink-0 transition-colors duration-150 ${
+          active ? "text-accent-text" : "opacity-80"
+        }`}
+        aria-hidden="true"
+      >
         {icon}
       </span>
-      <span ref={labelRef} className="min-w-0 flex-1 truncate">
+      <span ref={labelRef} className="relative z-10 min-w-0 flex-1 truncate">
         {label}
       </span>
-      <kbd className="shrink-0 font-mono text-[0.6875rem] text-ink-faint opacity-75">
+      <kbd className="relative z-10 shrink-0 font-mono text-[0.6875rem] text-ink-faint opacity-80">
         {shortcut}
       </kbd>
     </Link>
@@ -58,8 +73,8 @@ interface SidebarCollectionItemProps {
 }
 
 /**
- * Collection item row demonstrating p-track's interruptible `motion/mini`
- * title nudge paired with the inset 3px left accent hover indicator.
+ * Collection item row pairing spring-gliding `layoutId` active pill with
+ * interruptible `motion/mini` title nudge (stationary hit target).
  */
 export function SidebarCollectionItem({
   title,
@@ -85,21 +100,31 @@ export function SidebarCollectionItem({
       onClick={onSelect}
       data-active={active ? "true" : undefined}
       aria-pressed={active}
-      className="sidebar-row sidebar-row--accent-hover group"
+      className="sidebar-row group"
     >
+      {active ? (
+        <motion.span
+          layoutId="sidebar-active-space"
+          transition={SPRING_PILL}
+          className="sidebar-active-pill"
+          aria-hidden="true"
+        />
+      ) : null}
       <span
         ref={labelRef}
-        className={`min-w-0 flex-1 truncate ${
+        className={`relative z-10 min-w-0 flex-1 truncate ${
           active
             ? "font-semibold text-[var(--nav-active-text)]"
             : settled
               ? "font-medium text-ink-faint"
-              : "font-semibold text-ink-primary"
+              : "font-semibold text-ink-soft group-hover:text-ink-primary"
         }`}
       >
         {title}
       </span>
-      {trailing}
+      <span className="relative z-10 flex shrink-0 items-center">
+        {trailing}
+      </span>
     </button>
   );
 }

@@ -1,20 +1,20 @@
 /*
- * Semantic Design Token System & Theme Bridge
+ * Semantic Design Token System & Iridescent Gradient Theme Bridge
  *
- * Modular theme files live in `./themes/light.css` and `./themes/dark.css`.
- * Swap or customize either file to reskin the entire application while keeping
- * `color-scheme: light dark` and WCAG contrast contracts intact.
+ * Modular theme files live in:
+ *   - `./themes/light.css`   (Daylight Pearl Frost)
+ *   - `./themes/dark.css`    (Midnight Prism Aurora)
+ *   - `./themes/accents.css` (Prism / Aurora / Hyper / Solar gradient worlds)
  */
 
 @import "./themes/light.css";
 @import "./themes/dark.css";
+@import "./themes/accents.css";
 
 :root {
   /* Follow system preference by default; never hardcode a single root scheme. */
   color-scheme: light dark;
 
-  /* Reflect explicit user override from <meta name="color-scheme"> and
-     data-theme-override (guarantees instant invalidation in macOS WKWebView). */
   &:has(> head > meta[name="color-scheme"][content="dark"]),
   &[data-theme-override="dark"] {
     color-scheme: dark;
@@ -43,6 +43,7 @@
   @supports (color: light-dark(white, black)) {
     --night: light-dark(var(--light-night), var(--dark-night));
     --canvas-bg: light-dark(var(--light-canvas-bg), var(--dark-canvas-bg));
+    --canvas-glass: light-dark(var(--light-canvas-glass), var(--dark-canvas-glass));
     --surface: light-dark(var(--light-surface), var(--dark-surface));
     --surface-raised: light-dark(var(--light-surface-raised), var(--dark-surface-raised));
     --surface-soft: light-dark(var(--light-surface-soft), var(--dark-surface-soft));
@@ -92,10 +93,14 @@
     );
     --button-stop-1: light-dark(var(--light-button-stop-1), var(--dark-button-stop-1));
     --button-stop-2: light-dark(var(--light-button-stop-2), var(--dark-button-stop-2));
+    --button-stop-3: light-dark(var(--light-button-stop-3), var(--dark-button-stop-3));
     --button-hover-1: light-dark(var(--light-button-hover-1), var(--dark-button-hover-1));
     --button-hover-2: light-dark(var(--light-button-hover-2), var(--dark-button-hover-2));
-    --glow-1: light-dark(var(--light-glow-1), var(--dark-glow-1));
-    --glow-2: light-dark(var(--light-glow-2), var(--dark-glow-2));
+    --button-hover-3: light-dark(var(--light-button-hover-3), var(--dark-button-hover-3));
+    --orb-1: light-dark(var(--light-orb-1), var(--dark-orb-1));
+    --orb-2: light-dark(var(--light-orb-2), var(--dark-orb-2));
+    --orb-3: light-dark(var(--light-orb-3), var(--dark-orb-3));
+    --spotlight: light-dark(var(--light-spotlight), var(--dark-spotlight));
     --sheen: light-dark(var(--light-sheen), var(--dark-sheen));
     --shadow-a: light-dark(var(--light-shadow-a), var(--dark-shadow-a));
     --shadow-b: light-dark(var(--light-shadow-b), var(--dark-shadow-b));
@@ -106,17 +111,32 @@
     --accent-glow: light-dark(var(--light-accent-glow), var(--dark-accent-glow));
   }
 
-  /* ── Composite Visual Tokens ─────────────────────────────────────────── */
-  --body-glow-1: radial-gradient(60rem 40rem at -8% -18%, var(--glow-1), transparent 60%);
-  --body-glow-2: radial-gradient(70rem 50rem at 112% 118%, var(--glow-2), transparent 60%);
-  --button-bg: linear-gradient(180deg, var(--button-stop-1), var(--button-stop-2));
-  --button-bg-hover: linear-gradient(180deg, var(--button-hover-1), var(--button-hover-2));
-  --card-sheen: linear-gradient(180deg, var(--sheen), transparent 40%);
-  --dialog-sheen: linear-gradient(180deg, var(--sheen), transparent 30%);
+  /* ── Composite Iridescent Gradient & Glass Tokens ────────────────────── */
+  --accent-gradient: linear-gradient(
+    135deg,
+    var(--button-stop-1),
+    var(--button-stop-2) 52%,
+    var(--button-stop-3)
+  );
+  --accent-gradient-vertical: linear-gradient(
+    180deg,
+    var(--button-stop-1),
+    var(--button-stop-2) 52%,
+    var(--button-stop-3)
+  );
+  --button-bg: var(--accent-gradient);
+  --button-bg-hover: linear-gradient(
+    135deg,
+    var(--button-hover-1),
+    var(--button-hover-2) 52%,
+    var(--button-hover-3)
+  );
+  --card-sheen: linear-gradient(155deg, var(--sheen), transparent 46%);
+  --dialog-sheen: linear-gradient(160deg, var(--sheen), transparent 36%);
   --highlight-inset: inset 0 1px 0 var(--sheen);
-  --shadow-1: 0 1px 2px var(--shadow-a), 0 8px 24px var(--shadow-b);
-  --shadow-2: 0 2px 6px var(--shadow-a), 0 18px 56px var(--shadow-deep);
-  --shadow-button: 0 1px 2px var(--shadow-a);
+  --shadow-1: 0 2px 6px var(--shadow-a), 0 12px 36px var(--shadow-b);
+  --shadow-2: 0 4px 12px var(--shadow-a), 0 24px 64px var(--shadow-deep);
+  --shadow-button: 0 2px 6px var(--shadow-a);
   --drawer-shadow: -24px 0 64px var(--shadow-deep);
 
   accent-color: var(--accent);

@@ -23,13 +23,13 @@ pub fn build_menu<R: Runtime>(app: &AppHandle<R>) -> tauri::Result<Menu<R>> {
         .accelerator("CmdOrCtrl+,")
         .build(app)?;
 
-    let view_home = MenuItemBuilder::with_id("menu:navigate-home", "Home")
+    let view_home = MenuItemBuilder::with_id("menu:navigate-home", "Studio")
         .accelerator("CmdOrCtrl+1")
         .build(app)?;
-    let view_workspace = MenuItemBuilder::with_id("menu:navigate-workspace", "Workspace")
+    let view_workspace = MenuItemBuilder::with_id("menu:navigate-workspace", "Canvas")
         .accelerator("CmdOrCtrl+2")
         .build(app)?;
-    let view_activity = MenuItemBuilder::with_id("menu:navigate-activity", "Activity")
+    let view_activity = MenuItemBuilder::with_id("menu:navigate-activity", "Stream")
         .accelerator("CmdOrCtrl+3")
         .build(app)?;
     let toggle_sidebar = MenuItemBuilder::with_id("menu:toggle-sidebar", "Toggle Sidebar")

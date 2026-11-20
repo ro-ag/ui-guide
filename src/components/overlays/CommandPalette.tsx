@@ -1,9 +1,7 @@
 import { useNavigate } from "@tanstack/react-router";
 import { useSelector } from "@tanstack/react-store";
 import {
-  Activity,
-  Home,
-  LayoutGrid,
+  Palette,
   PanelLeft,
   PanelRight,
   Search,
@@ -11,13 +9,14 @@ import {
   SunMoon,
 } from "lucide-react";
 import { type ReactNode, useEffect, useMemo, useRef, useState } from "react";
+import { ACCENT_PRESETS, PRIMARY_NAV } from "../../config/shell-config";
 import { isReducedMotionDomActive } from "../../lib/motion";
 import { shellStore } from "../../stores/shell-store";
 import { NativeDialog } from "./NativeDialog";
 
 interface PaletteCommand {
   id: string;
-  group: "Navigate" | "Shell";
+  group: "Navigate" | "Shell" | "Accent";
   label: string;
   hint: string;
   shortcut?: string;
@@ -41,33 +40,18 @@ export function CommandPalette() {
 
   const commands = useMemo<PaletteCommand[]>(
     () => [
-      {
-        id: "nav-home",
-        group: "Navigate",
-        label: "Go to Home",
-        hint: "Overview of the empty shell & transition playground",
-        shortcut: "⌘1",
-        icon: <Home className="h-3.5 w-3.5" aria-hidden="true" />,
-        run: () => navigateWithTransition("/"),
-      },
-      {
-        id: "nav-workspace",
-        group: "Navigate",
-        label: "Go to Workspace",
-        hint: "Clean blank canvas + optional bottom dock",
-        shortcut: "⌘2",
-        icon: <LayoutGrid className="h-3.5 w-3.5" aria-hidden="true" />,
-        run: () => navigateWithTransition("/workspace"),
-      },
-      {
-        id: "nav-activity",
-        group: "Navigate",
-        label: "Go to Activity",
-        hint: "TanStack Query + Tauri IPC live data starter",
-        shortcut: "⌘3",
-        icon: <Activity className="h-3.5 w-3.5" aria-hidden="true" />,
-        run: () => navigateWithTransition("/activity"),
-      },
+      ...PRIMARY_NAV.map((item) => {
+        const Icon = item.icon;
+        return {
+          id: `nav-${item.to}`,
+          group: "Navigate" as const,
+          label: `Go to ${item.label}`,
+          hint: item.description,
+          shortcut: item.shortcut,
+          icon: <Icon className="h-3.5 w-3.5" aria-hidden="true" />,
+          run: () => navigateWithTransition(item.to),
+        };
+      }),
       {
         id: "shell-sidebar",
         group: "Shell",
@@ -92,8 +76,8 @@ export function CommandPalette() {
       {
         id: "shell-theme",
         group: "Shell",
-        label: "Toggle Color Theme",
-        hint: "Switch between dark and light (reverts to System when matching OS)",
+        label: "Toggle Light / Dark Theme",
+        hint: "Switch between Warm Obsidian and Warm Alabaster",
         icon: <SunMoon className="h-3.5 w-3.5" aria-hidden="true" />,
         run: () => shellStore.actions.quickToggleTheme(),
       },
@@ -101,11 +85,19 @@ export function CommandPalette() {
         id: "shell-settings",
         group: "Shell",
         label: "Open Settings",
-        hint: "Theme, density, reduced motion, and layout controls",
+        hint: "Theme, accent palette, density, and reduced motion controls",
         shortcut: "⌘,",
         icon: <Settings className="h-3.5 w-3.5" aria-hidden="true" />,
         run: () => shellStore.actions.setSettingsOpen(true),
       },
+      ...ACCENT_PRESETS.map((preset) => ({
+        id: `accent-${preset.id}`,
+        group: "Accent" as const,
+        label: `Accent: ${preset.label}`,
+        hint: `Switch shell accent palette to ${preset.label}`,
+        icon: <Palette className="h-3.5 w-3.5" aria-hidden="true" />,
+        run: () => shellStore.actions.setAccent(preset.id),
+      })),
     ],
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [navigate],
@@ -172,7 +164,7 @@ export function CommandPalette() {
               execute(filtered[activeIndex]);
             }
           }}
-          placeholder="Jump to view or run shell command…"
+          placeholder="Jump to view, switch accent, or run command…"
           aria-label="Search commands"
           className="h-11 w-full bg-transparent text-sm text-ink-primary placeholder:text-[var(--placeholder)] focus-visible:shadow-none"
         />
